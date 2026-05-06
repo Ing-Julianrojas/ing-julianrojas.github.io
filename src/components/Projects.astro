@@ -1,92 +1,54 @@
 ---
-import GitHub from "./icons/GitHub.astro"
-import NextJS from "./icons/NextJS.astro"
-import Tailwind from "./icons/Tailwind.astro"
-import Link from "./icons/Link.astro"
-import LinkButton from "./LinkButton.astro"
-
-const TAGS = {
-  NEXT: {
-    name: "Next.js",
-    class: "bg-black text-white",
-    icon: NextJS,
-  },
-  TAILWIND: {
-    name: "Tailwind CSS",
-    class: "bg-[#003159] text-white",
-    icon: Tailwind,
-  },
-}
-const PROJECTS = [
-  {
-    title: "SVGL - A beautiful library with SVG logos",
-    description:
-      "Biblioteca de logos SVG de las marcas más populares. +10k visitas al mes. +2K svgs descargados. Creado desde cero con Next.js, React y Tailwind CSS.",
-    link: "https://svgl.vercel.app/",
-    github: "https://github.com/pheralb/svgl",
-    image: "/projects/svgl.webp",
-    tags: [TAGS.NEXT, TAGS.TAILWIND],
-  },
-  {
-    title: "AdventJS - Retos de programación con JavaScript y TypeScript",
-    description:
-      "Plataforma gratuita con retos de programación. Más de 1 millón de visitas en un mes. +50K retos completados. Creada desde cero con Next.js, React y Tailwind CSS.",
-    link: "https://adventjs.dev",
-    image: "/projects/adventjs.webp",
-    tags: [TAGS.NEXT, TAGS.TAILWIND],
-  },
-]
 ---
 
-<div class="flex flex-col gap-y-16">
-  {
-    PROJECTS.map(({ image, title, description, tags, link, github }) => (
-    <article class="flex flex-col space-x-0 space-y-8 group md:flex-row md:space-x-8 md:space-y-0">
-  <div class="w-full md:w-1/2">
-    <div class="relative flex flex-col items-center col-span-6 row-span-5 gap-8 transition duration-500 ease-in-out transform shadow-xl overflow-clip rounded-xl sm:rounded-xl md:group-hover:-translate-y-1 md:group-hover:shadow-2xl lg:border lg:border-gray-800 lg:hover:border-gray-700 lg:hover:bg-gray-800/50">
-      <img alt="Recién llegado vs 5 años en Nueva Zelanda" class="object-cover object-top w-full h-56 transition duration-500 sm:h-full md:scale-110 md:group-hover:scale-105" loading="lazy" src={image} />
+<div class="grid gap-12">
+  <!-- Vintago Project -->
+  <article class="relative overflow-hidden rounded-[2rem] border border-slate-200/70 bg-gradient-to-br from-white/90 to-slate-50/90 dark:from-slate-950/90 dark:to-slate-900/90 p-8 shadow-2xl shadow-slate-900/10 dark:shadow-black/20 backdrop-blur-xl">
+    <div class="grid lg:grid-cols-2 gap-8 items-center">
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <p class="text-sm uppercase tracking-[0.35em] text-cyan-600 dark:text-cyan-400 font-semibold">Proyecto Estratégico</p>
+          <h3 class="text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white">Vintago</h3>
+          <p class="text-lg text-slate-600 dark:text-slate-400">E-commerce & Branding</p>
+        </div>
+        <p class="text-lg leading-relaxed text-slate-700 dark:text-slate-300">
+          Mi mano izquierda creativa. Una marca de ropa donde fusiono diseño, branding y desarrollo web real. Vintago es mi laboratorio de experimentación donde integro estrategia de producto, estética visual y arquitectura digital en una única experiencia.
+        </p>
+        <div class="flex flex-wrap gap-2 pt-4">
+          <span class="px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-sm font-semibold">E-commerce</span>
+          <span class="px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-sm font-semibold">Branding</span>
+          <span class="px-4 py-2 rounded-full bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-400 text-sm font-semibold">Creatividad</span>
+        </div>
+      </div>
+      <div class="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 h-96 flex items-center justify-center shadow-lg">
+        <div class="text-6xl opacity-20">👕</div>
+      </div>
     </div>
-  </div>
+  </article>
 
-  <div class="w-full md:w-1/2 md:max-w-lg">
-    <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
-      {title}
-    </h3>
-    <div class="flex flex-wrap mt-2">
-      <ul class="flex flex-row mb-2 gap-x-2">
-          {tags.map((tag) => (
-            <li>
-              <span
-                class={`flex gap-x-2 rounded-full text-xs ${tag.class} py-1 px-2 `}
-              >
-                <tag.icon class="size-4" />
-                {tag.name}
-              </span>
-            </li>
-          ))}
-        </ul>
-
-      <div class="mt-2 text-gray-700 dark:text-gray-400">{description}</div>
-      <footer class="flex items-end justify-start mt-4 gap-x-4">
-          {github && (
-            <LinkButton href={github}>
-              <GitHub class="size-6" />
-              Code
-              
-            </LinkButton>
-          )}
-          {link && (
-            <LinkButton href={link}>
-              <Link class="size-4" />
-              Preview
-            </LinkButton>
-          )}
-        </footer>
+  <!-- Infrastructure Project -->
+  <article class="relative overflow-hidden rounded-[2rem] border border-slate-200/70 bg-gradient-to-br from-white/90 to-slate-50/90 dark:from-slate-950/90 dark:to-slate-900/90 p-8 shadow-2xl shadow-slate-900/10 dark:shadow-black/20 backdrop-blur-xl">
+    <div class="grid lg:grid-cols-2 gap-8 items-center">
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <p class="text-sm uppercase tracking-[0.35em] text-emerald-600 dark:text-emerald-400 font-semibold">Especialización Técnica</p>
+          <h3 class="text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white">Plataforma de Infraestructura Operativa</h3>
+          <p class="text-lg text-slate-600 dark:text-slate-400">Big Data & DevSecOps</p>
+        </div>
+        <p class="text-lg leading-relaxed text-slate-700 dark:text-slate-300">
+          Un proyecto que demuestra la capacidad de arquitecturar sistemas seguros, monitorear despliegues continuos y mantener disponibilidad para servicios con altos volúmenes de datos. Integra auditoría de incidentes, resiliencia infraestructural y protección de activos digitales.
+        </p>
+        <div class="flex flex-wrap gap-2 pt-4">
+          <span class="px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm font-semibold">Escalabilidad</span>
+          <span class="px-4 py-2 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 text-sm font-semibold">Optimización</span>
+          <span class="px-4 py-2 rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-sm font-semibold">Seguridad</span>
+        </div>
+      </div>
+      <div class="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 h-96 flex items-center justify-center shadow-lg">
+        <div class="text-6xl opacity-20">🛡️</div>
+      </div>
     </div>
-  </div>
-</article>
-    ))
-  }
+  </article>
 </div>
 
 

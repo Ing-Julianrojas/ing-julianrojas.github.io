@@ -1,0 +1,180 @@
+---
+// NeonBackground.astro - Red de partículas (Constellation Effect)
+---
+
+<div class="neon-background-container">
+  <canvas id="neonCanvas"></canvas>
+</div>
+
+<style>
+  .neon-background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: linear-gradient(135deg, #0f172a 0%, #1a1f3a 50%, #0f172a 100%);
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script>
+  interface Particle {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    radius: number;
+    color: string;
+  }
+
+  const canvas = document.getElementById('neonCanvas') as HTMLCanvasElement;
+  const ctx = canvas.getContext('2d')!;
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  // Colores neón
+  const neonColors = ['#00F3FF', '#7C3AED', '#39FF14'];
+
+  // Crear partículas
+  const particles: Particle[] = [];
+  const particleCount = 60;
+  const connectionDistance = 200;
+
+  for (let i = 0; i < particleCount; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      radius: Math.random() * 1.5 + 0.5,
+      color: neonColors[Math.floor(Math.random() * neonColors.length)],
+    });
+  }
+
+  // Variables para interacción con mouse
+  let mouseX = canvas.width / 2;
+  let mouseY = canvas.height / 2;
+  const mouseInfluenceRadius = 250;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  // Dibujar conexiones entre partículas
+  function drawConnections() {
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < connectionDistance) {
+          const opacity = (1 - distance / connectionDistance) * 0.3;
+          ctx.strokeStyle = `rgba(0, 243, 255, ${opacity})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  // Dibujar partículas
+  function drawParticles() {
+    particles.forEach((particle) => {
+      ctx.fillStyle = particle.color;
+      ctx.shadowColor = particle.color;
+      ctx.shadowBlur = 10;
+      ctx.beginPath();
+      ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.shadowBlur = 0;
+  }
+
+  // Actualizar partículas
+  function updateParticles() {
+    particles.forEach((particle) => {
+      // Movimiento natural
+      particle.x += particle.vx;
+      particle.y += particle.vy;
+
+      // Rebote en bordes
+      if (particle.x - particle.radius < 0 || particle.x + particle.radius > canvas.width) {
+        particle.vx *= -1;
+        particle.x = Math.max(particle.radius, Math.min(canvas.width - particle.radius, particle.x));
+      }
+      if (particle.y - particle.radius < 0 || particle.y + particle.radius > canvas.height) {
+        particle.vy *= -1;
+        particle.y = Math.max(particle.radius, Math.min(canvas.height - particle.radius, particle.y));
+      }
+
+      // Interacción con mouse
+      const dx = mouseX - particle.x;
+      const dy = mouseY - particle.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+
+      if (distance < mouseInfluenceRadius) {
+        // Atracción hacia el mouse
+        const force = 0.015 * (1 - distance / mouseInfluenceRadius);
+        particle.vx += (dx / distance) * force * 0.5;
+        particle.vy += (dy / distance) * force * 0.5;
+
+        // Cambiar color al acercarse
+        particle.color = '#00F3FF';
+      } else {
+        // Restaurar color original lentamente
+        const chance = Math.random();
+        if (chance < 0.02) {
+          particle.color = neonColors[Math.floor(Math.random() * neonColors.length)];
+        }
+      }
+
+      // Fricción
+      particle.vx *= 0.995;
+      particle.vy *= 0.995;
+
+      // Velocidad máxima
+      const maxSpeed = 1;
+      const speed = Math.sqrt(particle.vx ** 2 + particle.vy ** 2);
+      if (speed > maxSpeed) {
+        particle.vx = (particle.vx / speed) * maxSpeed;
+        particle.vy = (particle.vy / speed) * maxSpeed;
+      }
+    });
+  }
+
+  // Loop principal
+  function animate() {
+    // Fondo gradiente
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    gradient.addColorStop(0, '#0f172a');
+    gradient.addColorStop(0.5, '#1a1f3a');
+    gradient.addColorStop(1, '#0f172a');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    updateParticles();
+    drawConnections();
+    drawParticles();
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>

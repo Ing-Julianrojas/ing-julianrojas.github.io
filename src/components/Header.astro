@@ -1,26 +1,35 @@
 ---
 import ThemeToggle from "./ThemeToggle.astro"
 
+// Detectar la página actual
+const currentPath = new URL(Astro.request.url).pathname;
+const isPortfolio = currentPath.includes('/portafolio');
+
 const navItems = [
   {
     title: "Experiencia",
     label: "experiencia",
-    url: "/#experiencia",
+    url: isPortfolio ? "/portafolio#experiencia" : "/#experiencia",
+  },
+  {
+    title: "Educación",
+    label: "educacion",
+    url: isPortfolio ? "/portafolio#educacion" : "/#educacion",
   },
   {
     title: "Proyectos",
     label: "proyectos",
-    url: "/#proyectos",
+    url: isPortfolio ? "/portafolio#proyectos" : "/#proyectos",
   },
   {
     title: "Sobre mí",
     label: "sobre-mi",
-    url: "/#sobre-mi",
+    url: isPortfolio ? "/portafolio#sobre-mi" : "/#sobre-mi",
   },
   {
     title: "Contacto",
     label: "contacto",
-    url: "mailto:miduga@gmail.com",
+    url: isPortfolio ? "/portafolio#contacto" : "/#contacto",
   },
 ]
 ---
