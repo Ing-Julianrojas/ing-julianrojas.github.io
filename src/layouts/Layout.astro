@@ -18,99 +18,607 @@ const { description, title } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="darkreader-lock" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <ViewTransitions />
   </head>
 
   <body class="relative text-black dark:text-white">
-    <div
-      class="absolute top-0 bottom-0 z-[-2] min-h-screen w-full bg-gray-50 dark:bg-gray-950
-      bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(217,216,255,0.5),rgba(255,255,255,0.9))]
-      dark:bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"
-    >
-    </div>
+
+    <!-- DARK MODE: Canvas de partículas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- DARK MODE: Cursor neón -->
+    <div id="cursor-ring"></div>
+    <div id="cursor-dot"></div>
+
+    <!-- DARK MODE: Grano de película -->
+    <div class="grain"></div>
+
+    <!-- DARK MODE: Scanlines -->
+    <div class="scanlines"></div>
+
+    <!-- Fondo adaptativo -->
+    <div id="bg-layer"></div>
+
     <Header />
     <slot />
     <Footer />
+
     <style is:global>
+      /* ─── VARIABLES ─── */
+      *, *::before, *::after { box-sizing: border-box; }
+
       :root {
+        /* Dark (igual al index) */
+        --neon-cyan:    #00f3ff;
+        --neon-green:   #39ff14;
+        --neon-purple:  #7c3aed;
+        --bg-deep:      #060a12;
+        --bg-mid:       #0d1526;
+        --text-primary: #e8edf5;
+        --text-muted:   #4a5568;
+        --text-dim:     #2d3748;
+
+        /* Light */
+        --lt-bg:        #f7f8fc;
+        --lt-surface:   #ffffff;
+        --lt-border:    #e2e8f0;
+        --lt-text:      #111827;
+        --lt-muted:     #6b7280;
+        --lt-accent:    #0891b2;
+        --lt-accent2:   #6d28d9;
+
         color-scheme: light dark;
       }
 
       html {
-        font-family: "Onest Variable", system-ui, sans-serif;
+        font-family: "Space Grotesk", "Onest Variable", system-ui, sans-serif;
         scroll-behavior: smooth;
       }
 
       body {
-        color: rgba(17, 17, 17, 0.9);
         display: flex;
         flex-direction: column;
         min-height: 100vh;
         overscroll-behavior: none;
+        transition: background 0.3s ease, color 0.3s ease;
+        padding: 0;
+        margin: 0;
+        position: relative;
+        z-index: 1;
+      }
+
+      html:not(.dark) body {
+        background: var(--lt-bg);
+        color: var(--lt-text);
+        cursor: auto;
+      }
+
+      html.dark body {
+        background: var(--bg-deep);
+        color: var(--text-primary);
+        cursor: none;
       }
 
       @media (prefers-reduced-motion: reduce) {
-        html {
-          scroll-behavior: auto;
+        html { scroll-behavior: auto; }
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
         }
       }
 
-      @media (prefers-color-scheme: dark) {
-        body {
-          color: rgba(255, 255, 255, 0.9);
-        }
+      /* ─── PARTÍCULAS CANVAS ─── */
+      #particles-canvas {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+        display: none;
+      }
+      html.dark #particles-canvas {
+        display: block;
       }
 
-      #header-nav {
-        animation: blur linear both 0.5s;
+      /* ─── FONDO ─── */
+      #bg-layer {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+        transition: background 0.4s ease;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      html:not(.dark) #bg-layer {
+        background:
+          radial-gradient(ellipse 80% 60% at 50% -10%, rgba(8,145,178,0.10), transparent),
+          radial-gradient(ellipse 60% 40% at 80% 80%, rgba(109,40,217,0.06), transparent),
+          var(--lt-bg);
+      }
+
+      html.dark #bg-layer {
+        background:
+          radial-gradient(ellipse 80% 80% at 50% -20%, rgba(120,119,198,0.3), rgba(255,255,255,0)),
+          var(--bg-deep);
+      }
+
+      /* ─── GRAIN & SCANLINES (solo dark) ─── */
+      .grain {
+        position: fixed;
+        inset: 0;
+        opacity: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 256px 256px;
+        animation: grain-move 0.4s steps(1) infinite;
+        pointer-events: none;
+        z-index: 1;
+        transition: opacity 0.4s ease;
+      }
+      html.dark .grain { opacity: 0.028; }
+
+      @keyframes grain-move {
+        0%   { transform: translate(0, 0); }
+        25%  { transform: translate(-2%, -3%); }
+        50%  { transform: translate(3%, 1%); }
+        75%  { transform: translate(-1%, 4%); }
+        100% { transform: translate(2%, -2%); }
+      }
+
+      .scanlines {
+        position: fixed;
+        inset: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 3px,
+          rgba(0, 0, 0, 0.04) 3px,
+          rgba(0, 0, 0, 0.04) 4px
+        );
+        pointer-events: none;
+        z-index: 2;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      html.dark .scanlines { opacity: 1; }
+
+      /* ─── CURSOR (solo dark) ─── */
+      #cursor-ring {
+        position: fixed;
+        width: 38px;
+        height: 38px;
+        border: 1.5px solid var(--neon-cyan);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transition: width 0.22s ease, height 0.22s ease, border-color 0.22s ease, opacity 0.2s, box-shadow 0.22s ease;
+        transform: translate(-50%, -50%);
+        box-shadow:
+          0 0 8px rgba(0, 243, 255, 0.6),
+          0 0 20px rgba(0, 243, 255, 0.25),
+          inset 0 0 8px rgba(0, 243, 255, 0.08);
+        opacity: 0;
+        display: none;
+      }
+
+      #cursor-dot {
+        position: fixed;
+        width: 6px;
+        height: 6px;
+        background: #fff;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        box-shadow:
+          0 0 6px var(--neon-cyan),
+          0 0 14px rgba(0, 243, 255, 0.8),
+          0 0 30px rgba(0, 243, 255, 0.4);
+        transition: opacity 0.2s;
+        opacity: 0;
+        display: none;
+      }
+
+      #cursor-ring.is-hovering {
+        width: 58px;
+        height: 58px;
+        border-color: #00f3ff;
+        box-shadow:
+          0 0 14px rgba(0, 243, 255, 0.9),
+          0 0 40px rgba(0, 243, 255, 0.4),
+          0 0 80px rgba(0, 243, 255, 0.15),
+          inset 0 0 14px rgba(0, 243, 255, 0.1);
+      }
+
+      html.dark #cursor-ring,
+      html.dark #cursor-dot {
+        display: block;
+        opacity: 1;
+      }
+
+      /* ─── MAIN CONTENT ─── */
+      main, header, footer {
+        position: relative;
+        z-index: 2;
+      }
+
+      /* ─── HEADER DARK ─── */
+      html.dark header nav {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        text-transform: none;
+      }
+
+      html.dark header nav a {
+        color: var(--text-muted);
+        position: relative;
+        padding: 8px 12px;
+        transition: color 0.3s ease;
+      }
+
+      html.dark header nav a::after {
+        content: '';
+        position: absolute;
+        bottom: 0; left: 0; right: 0;
+        height: 1px;
+        background: var(--neon-cyan);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+      }
+
+      html.dark header nav a:hover { color: var(--neon-cyan) !important; }
+      html.dark header nav a:hover::after { transform: scaleX(1); }
+      html.dark header nav a.text-blue-500 { color: var(--neon-cyan) !important; }
+
+      /* ─── HEADER LIGHT ─── */
+      html:not(.dark) header nav {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+      }
+
+      html:not(.dark) header nav a { color: var(--lt-muted); transition: color 0.2s ease; }
+      html:not(.dark) header nav a:hover { color: var(--lt-accent) !important; }
+      html:not(.dark) header nav a.text-blue-500 { color: var(--lt-accent) !important; }
+
+      /* ─── SECTION TITLES ─── */
+      html.dark h2 {
+        font-family: 'Space Grotesk', sans-serif;
+        color: var(--text-primary) !important;
+        letter-spacing: -0.02em;
+      }
+      html.dark h2 svg { color: var(--neon-cyan) !important; }
+
+      html:not(.dark) h2 { color: var(--lt-text) !important; }
+      html:not(.dark) h2 svg { color: var(--lt-accent) !important; }
+
+      /* ─── HERO H1 ─── */
+      html.dark h1 {
+        font-family: 'Space Grotesk', sans-serif;
+        background: linear-gradient(135deg, var(--text-primary) 0%, var(--neon-cyan) 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+      }
+
+      html:not(.dark) h1 {
+        font-family: 'Space Grotesk', sans-serif;
+        background: linear-gradient(135deg, var(--lt-text) 0%, var(--lt-accent) 100%) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+      }
+
+      /* ─── DISPONIBLE BADGE ─── */
+      html.dark .bg-cyan-500 {
+        background-color: var(--neon-cyan) !important;
+        box-shadow: 0 0 8px var(--neon-cyan) !important;
+      }
+      html:not(.dark) .bg-cyan-500 {
+        background-color: var(--lt-accent) !important;
+        box-shadow: 0 0 8px rgba(8,145,178,0.4) !important;
+      }
+
+      /* Badge container dark */
+      html.dark .from-slate-800 {
+        background: linear-gradient(135deg, var(--bg-mid), rgba(0,243,255,0.06)) !important;
+        border-color: rgba(0,243,255,0.2) !important;
+      }
+      html.dark .from-slate-800 span { color: var(--text-muted) !important; }
+
+      /* Badge container light */
+      html:not(.dark) .from-slate-100 {
+        background: linear-gradient(135deg, #f0f9ff, #e0f2fe) !important;
+        border-color: #bae6fd !important;
+      }
+      html:not(.dark) .from-slate-100 span { color: var(--lt-accent) !important; }
+
+      /* ─── BOTONES CTA DARK ─── */
+      html.dark button {
+        font-family: 'Space Mono', monospace !important;
+        letter-spacing: 0.1em !important;
+      }
+
+      /* ─── FOTO WRAPPER DARK ─── */
+      html.dark .dark\:bg-slate-800 {
+        background: var(--bg-mid) !important;
+        border: 1px solid rgba(0,243,255,0.15) !important;
+      }
+
+      /* ─── CARDS DARK ─── */
+      html.dark article {
+        background: var(--bg-mid) !important;
+        border-color: rgba(0,243,255,0.08) !important;
+      }
+      html.dark article:hover {
+        border-color: rgba(0,243,255,0.2) !important;
+        box-shadow: 0 0 24px rgba(0,243,255,0.06) !important;
+      }
+
+      /* ─── FOOTER DARK ─── */
+      html.dark footer {
+        border-color: rgba(0,243,255,0.08) !important;
+        font-family: 'Space Mono', monospace !important;
+        font-size: 10px !important;
+        letter-spacing: 0.15em !important;
+        color: var(--text-dim) !important;
+        text-transform: uppercase !important;
+      }
+
+      /* ─── FOOTER LIGHT ─── */
+      html:not(.dark) footer {
+        border-color: var(--lt-border) !important;
+        color: var(--lt-muted) !important;
+        font-size: 13px !important;
+      }
+
+      /* ─── NAV SCROLL DARK ─── */
+      html.dark #header-nav {
+        animation: blur-dark linear both 0.5s;
         animation-timeline: scroll();
         animation-range: 0 500px;
       }
 
-      @keyframes blur {
+      @keyframes blur-dark {
+        from { border: 0px; }
         to {
+          box-shadow: 0px 5px 50px -5px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,243,255,0.1);
+          background: rgba(6,10,18,0.85);
           backdrop-filter: blur(20px);
-          border-width: 1px;
-          border-color: rgba(0, 0, 0);
-          padding: 0.25rem 0.75rem;
-          display: flex;
-          flex-direction: row;
-          align-items: center;
-          background-color: rgb(229, 229, 229);
-          border-radius: 9999px;
+          border: 1px solid rgba(0,243,255,0.1);
+          padding-left: 0.75rem;
+          padding-right: 0.75rem;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+          border-radius: 4px;
         }
       }
 
-      @media (prefers-color-scheme: dark) {
-        @keyframes blur {
-          from {
-            border: 0px;
-          }
-          to {
-            box-shadow:
-              0px 5px 50px -5px rgba(0, 0, 0, 0.1),
-              0px 0px 0 1px rgba(0, 0, 0, 0.3);
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(20px);
-            border-width: 1px;
-            border-color: rgba(0, 0, 0);
-            padding-left: 0.75rem;
-            padding-right: 0.75rem;
-            padding-top: 0.25rem;
-            padding-bottom: 0.25rem;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 9999px;
-          }
+      /* ─── NAV SCROLL LIGHT ─── */
+      html:not(.dark) #header-nav {
+        animation: blur-light linear both 0.5s;
+        animation-timeline: scroll();
+        animation-range: 0 500px;
+      }
+
+      @keyframes blur-light {
+        0% { background: transparent; }
+        to {
+          backdrop-filter: blur(20px);
+          background-color: rgba(255,255,255,0.9);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.05);
+          border-radius: 9999px;
+          padding: 0.25rem 0.75rem;
         }
       }
+
+      /* ─── CONTACT INPUTS DARK ─── */
+      html.dark input,
+      html.dark textarea {
+        background: var(--bg-mid) !important;
+        border-color: rgba(0,243,255,0.15) !important;
+        color: var(--text-primary) !important;
+        font-family: 'Space Mono', monospace !important;
+        border-radius: 0 !important;
+      }
+      html.dark input:focus,
+      html.dark textarea:focus {
+        border-color: var(--neon-cyan) !important;
+        box-shadow: 0 0 0 2px rgba(0,243,255,0.1) !important;
+        outline: none !important;
+      }
+      html.dark input::placeholder,
+      html.dark textarea::placeholder { color: var(--text-dim) !important; }
+
+      /* ─── CONTACT INPUTS LIGHT ─── */
+      html:not(.dark) input,
+      html:not(.dark) textarea {
+        background: var(--lt-surface) !important;
+        border-color: var(--lt-border) !important;
+        color: var(--lt-text) !important;
+      }
+      html:not(.dark) input:focus,
+      html:not(.dark) textarea:focus {
+        border-color: var(--lt-accent) !important;
+        box-shadow: 0 0 0 2px rgba(8,145,178,0.12) !important;
+        outline: none !important;
+      }
+
+      /* ─── TEXT COLORS DARK ─── */
+      html.dark .dark\:text-white { color: var(--text-primary) !important; }
+      html.dark .dark\:text-slate-300,
+      html.dark .dark\:text-gray-300 { color: var(--text-primary) !important; }
+      html.dark .dark\:text-slate-400,
+      html.dark .dark\:text-gray-400 { color: var(--text-muted) !important; }
+
+      /* ─── SURFACE COLORS DARK ─── */
+      html.dark .dark\:bg-gray-950,
+      html.dark .dark\:bg-slate-950 { background-color: var(--bg-deep) !important; }
+      html.dark .dark\:bg-gray-800,
+      html.dark .dark\:bg-slate-800 {
+        background-color: var(--bg-mid) !important;
+        border: 1px solid rgba(0,243,255,0.08) !important;
+      }
+      html.dark .dark\:border-gray-700,
+      html.dark .dark\:border-slate-700 { border-color: rgba(0,243,255,0.12) !important; }
     </style>
+
+    <script>
+      // ── CURSOR (solo dark) ──
+      const ring = document.getElementById('cursor-ring') as HTMLDivElement | null;
+      const dot  = document.getElementById('cursor-dot')  as HTMLDivElement | null;
+      let cursorActive = false;
+      let animId = 0;
+
+      function startCursor() {
+        if (!ring || !dot) return;
+        let rX = 0, rY = 0, dX = 0, dY = 0, tX = 0, tY = 0;
+
+        const onMove = (e: MouseEvent) => { tX = e.clientX; tY = e.clientY; };
+        document.addEventListener('mousemove', onMove);
+
+        function loop() {
+          dX = tX; dY = tY;
+          rX += (tX - rX) * 0.12;
+          rY += (tY - rY) * 0.12;
+          ring!.style.left = rX + 'px';
+          ring!.style.top  = rY + 'px';
+          dot!.style.left  = dX + 'px';
+          dot!.style.top   = dY + 'px';
+          animId = requestAnimationFrame(loop);
+        }
+        loop();
+
+        document.querySelectorAll('a, button, [role="button"]').forEach(el => {
+          el.addEventListener('mouseenter', () => ring!.classList.add('is-hovering'));
+          el.addEventListener('mouseleave', () => ring!.classList.remove('is-hovering'));
+        });
+        document.addEventListener('mouseleave', () => { ring!.style.opacity = '0'; dot!.style.opacity = '0'; });
+        document.addEventListener('mouseenter', () => { ring!.style.opacity = '1'; dot!.style.opacity = '1'; });
+      }
+
+      function stopCursor() {
+        if (ring && dot) {
+          ring.classList.remove('is-hovering');
+          ring.style.opacity = '0';
+          dot.style.opacity  = '0';
+          cancelAnimationFrame(animId);
+        }
+      }
+
+      function syncCursor() {
+        const isDark = document.documentElement.classList.contains('dark');
+        if (isDark && !cursorActive) { startCursor(); cursorActive = true; }
+        else if (!isDark && cursorActive) { stopCursor(); cursorActive = false; }
+      }
+
+      syncCursor();
+      new MutationObserver(syncCursor).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class'],
+      });
+
+      // ── PARTÍCULAS (solo dark) ──
+      const canvas = document.getElementById('particles-canvas') as HTMLCanvasElement | null;
+      const ctx = canvas?.getContext('2d');
+
+      if (canvas && ctx) {
+        const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+        resize();
+        window.addEventListener('resize', resize);
+
+        const COLORS = ['#00f3ff', '#7c3aed', '#39ff14'];
+        const COUNT  = 70;
+        const CONNECT_DIST = 160;
+        const MOUSE_REPEL  = 120;
+
+        interface P { x:number; y:number; vx:number; vy:number; r:number; opacity:number; color:string; }
+
+        const pts: P[] = Array.from({ length: COUNT }, () => ({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          vx: (Math.random() - 0.5) * 0.25,
+          vy: (Math.random() - 0.5) * 0.25,
+          r:  Math.random() * 1.2 + 0.4,
+          opacity: Math.random() * 0.6 + 0.3,
+          color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        }));
+
+        let mx = -999, my = -999;
+        document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+        function drawParticles() {
+          ctx!.clearRect(0, 0, canvas!.width, canvas!.height);
+
+          if (!document.documentElement.classList.contains('dark')) {
+            requestAnimationFrame(drawParticles);
+            return;
+          }
+
+          for (const p of pts) {
+            const dx = p.x - mx, dy = p.y - my;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < MOUSE_REPEL && dist > 0) {
+              const f = (MOUSE_REPEL - dist) / MOUSE_REPEL * 0.04;
+              p.vx += (dx/dist)*f; p.vy += (dy/dist)*f;
+            }
+            p.vx *= 0.992; p.vy *= 0.992;
+            const spd = Math.sqrt(p.vx*p.vx + p.vy*p.vy);
+            if (spd > 1.2) { p.vx *= 1.2/spd; p.vy *= 1.2/spd; }
+            p.x += p.vx; p.y += p.vy;
+            if (p.x < 0) { p.x = 0; p.vx *= -1; }
+            if (p.x > canvas!.width)  { p.x = canvas!.width;  p.vx *= -1; }
+            if (p.y < 0) { p.y = 0; p.vy *= -1; }
+            if (p.y > canvas!.height) { p.y = canvas!.height; p.vy *= -1; }
+          }
+
+          for (let i = 0; i < pts.length; i++) {
+            for (let j = i+1; j < pts.length; j++) {
+              const dx = pts[i].x-pts[j].x, dy = pts[i].y-pts[j].y;
+              const d  = Math.sqrt(dx*dx + dy*dy);
+              if (d < CONNECT_DIST) {
+                ctx!.strokeStyle = `rgba(0,243,255,${(1-d/CONNECT_DIST)*0.18})`;
+                ctx!.lineWidth = 0.7;
+                ctx!.beginPath();
+                ctx!.moveTo(pts[i].x, pts[i].y);
+                ctx!.lineTo(pts[j].x, pts[j].y);
+                ctx!.stroke();
+              }
+            }
+          }
+
+          for (const p of pts) {
+            ctx!.shadowColor  = p.color;
+            ctx!.shadowBlur   = 8;
+            ctx!.fillStyle    = p.color;
+            ctx!.globalAlpha  = p.opacity;
+            ctx!.beginPath();
+            ctx!.arc(p.x, p.y, p.r, 0, Math.PI*2);
+            ctx!.fill();
+          }
+          ctx!.globalAlpha = 1;
+          ctx!.shadowBlur  = 0;
+
+          requestAnimationFrame(drawParticles);
+        }
+        drawParticles();
+      }
+    </script>
   </body>
 </html>

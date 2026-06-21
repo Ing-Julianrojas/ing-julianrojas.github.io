@@ -7,9 +7,13 @@ interface Props {
   description: string
   link?: string
   date: string
+  type?: string
+  modality?: string
+  challenges?: string[]
+  learnings?: string[]
 }
 
-const { title, company, description, link, date } = Astro.props
+const { title, company, description, link, date, type, modality, challenges = [], learnings = [] } = Astro.props
 ---
 
 <div
@@ -24,33 +28,62 @@ const { title, company, description, link, date } = Astro.props
       <h3 class="text-xl font-bold text-yellow-400">{title}</h3>
       <h4 class="font-semibold text-xl text-gray-600 dark:text-white">{company}</h4>
       <time class="p-0 m-0 text-sm text-gray-600/80 dark:text-white/80">{date}</time>
+      {type && <p class="text-xs text-gray-500/70 dark:text-white/60 mt-2">{type}</p>}
+      {modality && <p class="text-xs text-gray-500/70 dark:text-white/60">{modality}</p>}
     </div>
   </div>
-  <div class="relative flex flex-col gap-2 pb-4 text-gray-600 dark:text-gray-300 md:col-span-3">
-    {description}
-    {
-      link && (
-        <LinkInline href={link}>
-          Saber más{" "}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-5 icon icon-tabler icon-tabler-chevron-right"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            stroke-width="2"
-            stroke="currentColor"
-            fill="none"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <>
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M9 6l6 6l-6 6" />
-            </>
-          </svg>
-        </LinkInline>
-      )
-    }
+  <div class="relative flex flex-col gap-6 pb-4 md:col-span-3">
+    <p class="text-gray-600 dark:text-gray-300">{description}</p>
+    
+    {/* Desafíos - Naranja/Rojo */}
+    {challenges && challenges.length > 0 && (
+      <div class="space-y-3">
+        <h4 class="text-sm font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wide">🎯 Desafíos</h4>
+        <div class="flex flex-wrap gap-2">
+          {challenges.map((challenge) => (
+            <span class="px-4 py-2 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 text-sm font-semibold border border-orange-200 dark:border-orange-700/50">
+              {challenge}
+            </span>
+          ))}
+        </div>
+      </div>
+    )}
+    
+    {/* Aprendizajes - Verde */}
+    {learnings && learnings.length > 0 && (
+      <div class="space-y-3">
+        <h4 class="text-sm font-bold text-green-600 dark:text-green-400 uppercase tracking-wide">✨ Aprendizajes</h4>
+        <div class="flex flex-wrap gap-2">
+          {learnings.map((learning) => (
+            <span class="px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm font-semibold border border-green-200 dark:border-green-700/50">
+              {learning}
+            </span>
+          ))}
+        </div>
+      </div>
+    )}
+    
+    {link && (
+      <LinkInline href={link}>
+        Saber más{" "}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="w-5 icon icon-tabler icon-tabler-chevron-right"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <>
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M9 6l6 6l-6 6" />
+          </>
+        </svg>
+      </LinkInline>
+    )}
   </div>
 </div>

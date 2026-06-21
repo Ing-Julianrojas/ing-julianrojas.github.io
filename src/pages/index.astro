@@ -138,13 +138,15 @@
             </a>
 
             <a
-              href="/portafolio#contacto"
+              href="/portafolio"
               class="social-link cta-link"
               aria-label="Trabajemos juntos"
+              style="width: 85%; justify-content: center;"
             >
-              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
               </svg>
+              
               <span>TRABAJEMOS JUNTOS</span>
             </a>
           </div>
@@ -177,7 +179,7 @@
 
       <!-- Footer con año y firma -->
       <footer class="site-footer">
-        <span class="footer-copy">© 2025 JULIÁN ROJAS</span>
+        <span class="footer-copy">© 2026 JULIÁN ROJAS</span>
         <span class="footer-sep">·</span>
         <span class="footer-code">&lt;/&gt; CON PROPÓSITO</span>
       </footer>
@@ -221,36 +223,47 @@
         pointer-events: none;
       }
 
-      /* ── CURSOR ── */
-      #cursor-ring {
-        position: fixed;
-        width: 36px;
-        height: 36px;
-        border: 1.5px solid var(--neon-cyan);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9999;
-        transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
-        transform: translate(-50%, -50%);
-        mix-blend-mode: screen;
-      }
-      #cursor-dot {
-        position: fixed;
-        width: 5px;
-        height: 5px;
-        background: var(--neon-cyan);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9999;
-        transform: translate(-50%, -50%);
-        box-shadow: 0 0 8px var(--neon-cyan);
-        transition: opacity 0.2s;
-      }
-      #cursor-ring.is-hovering {
-        width: 56px;
-        height: 56px;
-        border-color: var(--neon-purple);
-      }
+     /* ── CURSOR NEON ── */
+#cursor-ring {
+  position: fixed;
+  width: 38px;
+  height: 38px;
+  border: 1.5px solid var(--neon-cyan);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: width 0.22s ease, height 0.22s ease, border-color 0.22s ease, opacity 0.2s, box-shadow 0.22s ease;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 8px rgba(0, 243, 255, 0.6),
+    0 0 20px rgba(0, 243, 255, 0.25),
+    inset 0 0 8px rgba(0, 243, 255, 0.08);
+}
+#cursor-dot {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  box-shadow:
+    0 0 6px var(--neon-cyan),
+    0 0 14px rgba(0, 243, 255, 0.8),
+    0 0 30px rgba(0, 243, 255, 0.4);
+  transition: opacity 0.2s;
+}
+#cursor-ring.is-hovering {
+  width: 58px;
+  height: 58px;
+  border-color: #00f3ff;
+  box-shadow:
+    0 0 14px rgba(0, 243, 255, 0.9),
+    0 0 40px rgba(0, 243, 255, 0.4),
+    0 0 80px rgba(0, 243, 255, 0.15),
+    inset 0 0 14px rgba(0, 243, 255, 0.1);
+}
 
       /* ── GRAIN ── */
       .grain {
@@ -290,16 +303,16 @@
 
       /* ── LAYOUT ── */
       .layout {
-        position: relative;
-        z-index: 10;
-        min-height: 100dvh;
-        display: grid;
-        grid-template-rows: 1fr auto auto;
-        align-items: center;
-        padding: clamp(24px, 5vw, 60px);
-        gap: 40px;
-      }
-
+  position: relative;
+  z-index: 10;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  align-items: center;
+  padding: clamp(16px, 4vw, 48px);
+  padding-top: clamp(16px, 4vw, 48px);
+  gap: 32px;
+}
       /* ── HERO SECTION ── */
       .hero-section {
         display: flex;
@@ -608,13 +621,14 @@
       }
 
       .nav-label {
-        font-family: 'Space Mono', monospace;
-        font-size: 12px;
-        letter-spacing: 0.18em;
-        color: var(--text-muted);
-        transition: all 0.3s ease;
-        flex: 1;
-      }
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+  flex: 1;
+  text-transform: uppercase;
+}
 
       .nav-arrow {
         font-size: 14px;
@@ -666,6 +680,10 @@
       }
     </style>
   </body>
+  <style>
+  /* Ocultar cualquier header del Layout que se inyecte */
+  body > header { display: none !important; }
+</style>
 </html>
 
 <script>
