@@ -1,26 +1,28 @@
 ---
 import ThemeToggle from "./ThemeToggle.astro"
 
+const currentPath = new URL(Astro.request.url).pathname;
+
 const navItems = [
   {
     title: "Experiencia",
-    url: "/portafolio#experiencia",
+    id: "experiencia",
   },
   {
     title: "Educación",
-    url: "/portafolio#educacion",
+    id: "educacion",
   },
   {
     title: "Proyectos",
-    url: "/portafolio#proyectos",
+    id: "proyectos",
   },
   {
     title: "Sobre mí",
-    url: "/portafolio#sobre-mi",
+    id: "sobre-mi",
   },
   {
     title: "Contacto",
-    url: "/portafolio#contacto",
+    id: "contacto",
   },
 ]
 ---
@@ -40,7 +42,7 @@ const navItems = [
                 navItems.map((link) => (
                   <a
                     class="flex-shrink-0 whitespace-nowrap rounded-full px-2.5 py-1.5 text-[0.72rem] uppercase tracking-[0.18em] transition text-slate-700 dark:text-slate-200 hover:text-cyan-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
-                    href={link.url}
+                    href={currentPath === "/portafolio" ? `#${link.id}` : `/portafolio#${link.id}`}
                   >
                     {link.title}
                   </a>
@@ -84,7 +86,7 @@ const navItems = [
                 </a>
                 {
                   navItems.map((link, i) => (
-                    <a href={link.url} class="nav-link-mobile rounded-lg px-4 py-3 text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-900" data-mobile-link style={`--i:${i + 1}`}>
+                    <a href={currentPath === "/portafolio" ? `#${link.id}` : `/portafolio#${link.id}`} class="nav-link-mobile rounded-lg px-4 py-3 text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-900" data-mobile-link style={`--i:${i + 1}`}>
                       {link.title}
                     </a>
                   ))
@@ -98,14 +100,24 @@ const navItems = [
   </div>
 
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    const initHeader = () => {
       const sections = document.querySelectorAll<HTMLElement>('section[id]');
       const navLinks = document.querySelectorAll<HTMLAnchorElement>('#desktop-nav a');
 
+      const scrollToSection = (id: string | null) => {
+        if (!id) return;
+        const target = document.getElementById(id);
+        if (target) {
+          const headerOffset = 88;
+          const elementPosition = target.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({ top: elementPosition - headerOffset, behavior: 'smooth' });
+        }
+      };
+
       const updateActive = (id: string | null) => {
         navLinks.forEach((item) => {
-          const href = item.getAttribute('href');
-          const isActive = href === `/portafolio#${id}` || href === `#${id}`;
+          const href = item.getAttribute('href') || '';
+          const isActive = href.includes(`#${id}`);
           item.classList.toggle('text-cyan-500', isActive);
           item.classList.toggle('dark:text-cyan-400', isActive);
           item.classList.toggle('text-slate-700', !isActive);
@@ -138,7 +150,43 @@ const navItems = [
           sections.forEach((section) => observer.observe(section));
         }
       });
-      // Mobile menu toggle
+
+      document.querySelectorAll<HTMLAnchorElement>('a[href*="#"]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+          const href = link.getAttribute('href') || '';
+          if (!href.includes('#')) return;
+
+          const hash = href.split('#')[1];
+          if (!hash) return;
+
+          const targetPath = href.split('#')[0] || '';
+          const currentPath = window.location.pathname;
+
+          if (currentPath === '/portafolio' || targetPath === currentPath) {
+            event.preventDefault();
+            history.pushState({}, '', `#${hash}`);
+            scrollToSection(hash);
+            updateActive(hash);
+            return;
+          }
+
+          event.preventDefault();
+          sessionStorage.setItem('scroll-to-section', hash);
+          window.location.href = href;
+        });
+      });
+
+      const pendingSection = sessionStorage.getItem('scroll-to-section');
+      if (pendingSection) {
+        sessionStorage.removeItem('scroll-to-section');
+        setTimeout(() => scrollToSection(pendingSection), 120);
+      }
+
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        setTimeout(() => scrollToSection(hash), 120);
+      }
+
       const menuToggle = document.getElementById('menu-toggle')
       const mobileNav = document.getElementById('mobile-nav')
       if (menuToggle && mobileNav) {
@@ -171,16 +219,17 @@ const navItems = [
           }
         })
 
-        // Close button inside overlay
         const menuClose = document.getElementById('menu-close')
         if (menuClose) menuClose.addEventListener('click', () => setOpen(false))
 
-        // Close menu when a mobile link is clicked
         mobileNav.querySelectorAll('[data-mobile-link]').forEach((el) => {
           el.addEventListener('click', () => setOpen(false))
         })
       }
-    });
+    };
+
+    document.addEventListener('DOMContentLoaded', initHeader);
+    document.addEventListener('astro:page-load', initHeader);
   </script>
   <style is:global>
     /* Mobile menu overlay and animations */
