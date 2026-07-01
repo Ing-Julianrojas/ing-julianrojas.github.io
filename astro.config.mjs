@@ -6,5 +6,12 @@ import robotsTxt from "astro-robots-txt"
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind(), robotsTxt()],
-  site: 'https://Fuckkjulius.github.io'
+  site: 'https://Fuckkjulius.github.io',
+  vite: {
+    resolve: {
+      alias: {
+        '@': new URL('./src', import.meta.url),
+      },
+    },
+  },
 })

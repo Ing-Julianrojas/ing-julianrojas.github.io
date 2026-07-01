@@ -78,17 +78,17 @@
         <!-- Main Narrative -->
         <div class="space-y-4">
           <div>
-            <span class="inline-block px-3 py-1.5 rounded-full bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold uppercase tracking-wider border border-slate-200 dark:border-slate-600">
-              Mi Historia
+            <span class="inline-block px-3 py-1.5 rounded-full bg-gradient-to-r from-cyan-500 to-emerald-400 text-white text-xs font-bold uppercase tracking-wider ring-1 ring-cyan-400/20">
+              Sobre mí
             </span>
           </div>
-          
+
           <p class="text-lg leading-relaxed text-slate-700 dark:text-slate-300">
-            Ingeniero de sistemas apasionado por construir soluciones que funcionan sin excusas. Mi viaje tecnológico combina <span class="font-semibold text-slate-900 dark:text-white">infraestructura robusta, seguridad integrada y desarrollo full stack</span> — todo bajo una visión de arquitectura completa.
+            Soy Julián: un ingeniero de sistemas que transforma conceptos en productos digitales robustos y con seguridad integrada. Trabajo en la intersección entre infraestructura, ciberseguridad y desarrollo, construyendo soluciones pensadas para escalar y durar.
           </p>
-          
+
           <p class="text-lg leading-relaxed text-slate-700 dark:text-slate-300">
-            Especializado en transformar ideas complejas en experiencias digitales eficientes. Ya sea diseñando infraestructura segura para +500 usuarios, optimizando plataformas de alto volumen de datos, o liderando equipos técnicos — siempre busco <span class="font-semibold text-slate-900 dark:text-white">precisión, escalabilidad y excelencia</span>.
+            Me especializo en convertir problemas complejos en flujos de trabajo claros — desde diseñar arquitecturas resilientes para miles de usuarios hasta optimizar rutas críticas de rendimiento. Me interesa el balance entre velocidad y fiabilidad, y disfruto liderar equipos hacia soluciones medibles.
           </p>
         </div>
         
@@ -128,12 +128,12 @@
     </div>
 
     <!-- Three Core Competencies - Modern Grid -->
-    <div class="grid md:grid-cols-3 gap-6 py-8">
+  <div class="grid md:grid-cols-3 gap-6 py-8">
       <!-- Infraestructura Card -->
-      <div class="group relative overflow-hidden rounded-2xl p-[1px] bg-gradient-to-br from-blue-500/40 to-cyan-500/40">
+      <div class="group relative overflow-hidden rounded-2xl p-[1px] bg-gradient-to-br from-blue-500/40 to-cyan-500/40 neon-card">
         <div class="relative bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl rounded-2xl p-8 h-full shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 dark:border-slate-800/50">
           <div class="space-y-4">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900/30 dark:to-cyan-900/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg neon-accent">
               <span class="text-3xl">⚙️</span>
             </div>
             <div>
@@ -150,10 +150,10 @@
       </div>
 
       <!-- Seguridad Card -->
-      <div class="group relative overflow-hidden rounded-2xl p-[1px] bg-gradient-to-br from-emerald-500/40 to-teal-500/40">
+      <div class="group relative overflow-hidden rounded-2xl p-[1px] bg-gradient-to-br from-emerald-500/40 to-teal-500/40 neon-card">
         <div class="relative bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl rounded-2xl p-8 h-full shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 dark:border-slate-800/50">
           <div class="space-y-4">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-100 dark:from-emerald-900/30 dark:to-teal-900/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg neon-accent">
               <span class="text-3xl">🔐</span>
             </div>
             <div>
@@ -170,10 +170,10 @@
       </div>
 
       <!-- Desarrollo Card -->
-      <div class="group relative overflow-hidden rounded-2xl p-[1px] bg-gradient-to-br from-purple-500/40 to-pink-500/40">
+      <div class="group relative overflow-hidden rounded-2xl p-[1px] bg-gradient-to-br from-purple-500/40 to-pink-500/40 neon-card">
         <div class="relative bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl rounded-2xl p-8 h-full shadow-lg hover:shadow-2xl transition-all duration-500 border border-white/20 dark:border-slate-800/50">
           <div class="space-y-4">
-            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg neon-accent">
               <span class="text-3xl">💻</span>
             </div>
             <div>
@@ -232,3 +232,12 @@
 
   </div>
 </article>
+
+<style is:global>
+  .neon-card { transition: transform 420ms cubic-bezier(.2,.9,.2,1), box-shadow 420ms ease; }
+  .neon-card::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at 10% 10%, rgba(0,243,255,0.04), transparent 20%); mix-blend-mode: screen; opacity: 0.9; }
+  .neon-accent { box-shadow: 0 8px 40px rgba(0,243,255,0.06); transition: box-shadow 420ms ease, transform 420ms ease; }
+  .neon-card:hover { transform: translateY(-8px); box-shadow: 0 40px 120px rgba(0,243,255,0.07), inset 0 0 40px rgba(124,58,237,0.02); }
+  .neon-card:hover .neon-accent { box-shadow: 0 30px 90px rgba(0,243,255,0.12); transform: translateY(-6px) scale(1.03); }
+  @media (prefers-reduced-motion: reduce) { .neon-card, .neon-accent { transition: none !important; animation: none !important; } }
+</style>
