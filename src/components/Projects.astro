@@ -12,12 +12,13 @@
           <p class="text-lg text-slate-600 dark:text-slate-400">E-commerce & Branding</p>
         </div>
         <p class="text-lg leading-relaxed text-slate-700 dark:text-slate-300">
-          Mi mano izquierda creativa. Una marca de ropa donde fusiono diseño, branding y desarrollo web real. Vintago es mi laboratorio de experimentación donde integro estrategia de producto, estética visual y arquitectura digital en una única experiencia.
+          Marca de streetwear propia. Frontend desacoplado construido en <span class="font-semibold">Astro + React</span>, con animaciones scroll-based en <span class="font-semibold">GSAP (ScrollTrigger)</span>. El backend es <span class="font-semibold">WooCommerce como headless commerce</span>: el frontend consume la <span class="font-semibold">Store API REST de WooCommerce</span> para catálogo, carrito y checkout, con <span class="font-semibold">autenticación JWT</span> para login de usuarios. Personalicé el backend con <span class="font-semibold">snippets vía WPCode</span> (CORS entre subdominios, tema oscuro del checkout, integración del login JWT).
         </p>
         <div class="flex flex-wrap gap-2 pt-4">
-          <span class="px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-sm font-semibold">E-commerce</span>
-          <span class="px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-sm font-semibold">Branding</span>
-          <span class="px-4 py-2 rounded-full bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-400 text-sm font-semibold">Creatividad</span>
+          <span class="px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-sm font-semibold">Astro</span>
+          <span class="px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-sm font-semibold">React</span>
+          <span class="px-4 py-2 rounded-full bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-400 text-sm font-semibold">GSAP</span>
+          <span class="px-4 py-2 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-sm font-semibold">WooCommerce (Headless)</span>
         </div>
         <div class="pt-4">
           <a href="https://vintago.com.co/" target="_blank" class="inline-flex items-center gap-2 text-cyan-600 dark:text-cyan-400 font-semibold hover:gap-3 transition-all">
@@ -25,8 +26,9 @@
           </a>
         </div>
       </div>
-      <div class="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 h-96 flex items-center justify-center shadow-lg">
-        <div class="text-6xl opacity-20">👕</div>
+      <div class="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 h-96 shadow-lg">
+        <img src="/vintago.jpg" alt="Vintago streetwear project" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/10 via-transparent to-transparent"></div>
       </div>
     </div>
   </article>
@@ -36,17 +38,18 @@
     <div class="grid lg:grid-cols-2 gap-8 items-center">
       <div class="space-y-4">
         <div class="space-y-2">
-          <p class="text-sm uppercase tracking-[0.35em] text-emerald-600 dark:text-emerald-400 font-semibold">Solución Empresarial</p>
+          <p class="text-sm uppercase tracking-[0.35em] text-emerald-600 dark:text-emerald-400 font-semibold">En Desarrollo ⚠️</p>
           <h3 class="text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white">Dotaciones JR</h3>
-          <p class="text-lg text-slate-600 dark:text-slate-400">Gestión de Inventario & Dotaciones</p>
+          <p class="text-lg text-slate-600 dark:text-slate-400">CRM con Facturación Electrónica DIAN</p>
         </div>
         <p class="text-lg leading-relaxed text-slate-700 dark:text-slate-300">
-          Plataforma integral para la gestión de dotaciones y control de inventario empresarial. Sistema diseñado para optimizar procesos logísticos, mejorar trazabilidad de activos y facilitar la administración centralizada de dotaciones en organizaciones.
+          CRM para gestión de dotaciones: inventario, clientes, proveedores, gastos e ingresos, con <span class="font-semibold">facturación electrónica integrada a la DIAN</span>. Backend en <span class="font-semibold">Laravel (API REST)</span> y <span class="font-semibold">MySQL</span>, integrando el proveedor tecnológico <span class="font-semibold">Factus</span> para la validación de facturas ante la DIAN (CUFE, XML, PDF).
         </p>
         <div class="flex flex-wrap gap-2 pt-4">
-          <span class="px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm font-semibold">Inventario</span>
-          <span class="px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-sm font-semibold">Logística</span>
-          <span class="px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-sm font-semibold">ERP</span>
+          <span class="px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm font-semibold">Laravel</span>
+          <span class="px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-sm font-semibold">MySQL</span>
+          <span class="px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-sm font-semibold">DIAN</span>
+          <span class="px-4 py-2 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 text-sm font-semibold">Factus</span>
         </div>
       </div>
       <div class="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 h-96 flex items-center justify-center shadow-lg">
@@ -65,7 +68,7 @@
           <p class="text-lg text-slate-600 dark:text-slate-400">Catálogo e-commerce tecnológico con enfoque en conversión</p>
         </div>
         <p class="text-lg leading-relaxed text-slate-700 dark:text-slate-300">
-          Vintago.tech es un catálogo digital propio de más de 300 productos tecnológicos, construido como una experiencia de compra rápida y moderna. La plataforma une un diseño responsive con un flujo de conversión directo a WhatsApp y un catálogo optimizado para compras desde móvil.
+          Catálogo digital de 300+ productos tecnológicos. Construido en <span class="font-semibold">Next.js + Tailwind</span>, desplegado en Netlify, con flujo de conversión directo a WhatsApp optimizado para compra desde móvil.
         </p>
         <div class="grid gap-2 sm:grid-cols-3 pt-4">
           <span class="rounded-full bg-indigo-100 px-4 py-2 text-sm font-semibold text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400">Experimentación</span>
@@ -82,8 +85,9 @@
           </a>
         </div>
       </div>
-      <div class="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 h-96 flex items-center justify-center shadow-lg">
-        <div class="text-6xl opacity-20">🛒</div>
+      <div class="relative overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 h-96 shadow-lg">
+        <img src="/vintago-tech.png" alt="Vintago.tech catalog project" class="w-full h-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/10 via-transparent to-transparent"></div>
       </div>
     </div>
   </article>
